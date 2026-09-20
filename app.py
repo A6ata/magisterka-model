@@ -226,7 +226,7 @@ if page == PAGES[0]:
     with a: card("Punkty stacjonarne", "Istnienie, liczba i ekonomiczna dopuszczalność punktów stacjonarnych.")
     with b: card("Stabilność", "Lokalna klasyfikacja stabilności punktów stacjonarnych.")
     with c: card("Wzrost", "Długookresowe tempo wzrostu na zrównoważonej ścieżce wzrostu.")
-    with d: card("Dynamika", "Przebieg dostosowania do punktu stacjonarnego przy różnych wartościach \(E_0\)")
+    with d: card("Dynamika", r"Przebieg dostosowania do punktu stacjonarnego przy różnych wartościach \(E_0\)")
 
 
 # ---------------------------------------------------------------------
@@ -249,7 +249,7 @@ elif page == PAGES[1]:
         st.markdown("#### Problem planisty")
         st.latex(r"\max_{C,u}\int_0^\infty e^{-\delta t}U_\eta(C,E)\,dt")
         st.latex(r"U_\eta(C,E)=\frac{(CE)^{1-\eta}}{1-\eta},\quad \eta\neq 1")
-        st.latex(r"U_1(C,E)=\ln(CE), \quad \eta\eq 1")
+        st.latex(r"U_1(C,E)=\ln(CE), \quad \eta = 1")
         st.caption("δ — stopa dyskontowa; η — parametr krzywizny funkcji użyteczności.")
     with c3:
         st.markdown("#### Redukcja modelu")
@@ -434,7 +434,7 @@ elif page == PAGES[4]:
         ["η", "δ", "mL"],
         horizontal=True,
     )
-    parameter = {"η — preferencje": "eta", "δ — stopa dyskontowa": "delta", "mL — zdolność asymilacyjna": "m"}[option]
+    parameter = {"η": "eta", "δ": "delta", "mL": "m"}[option]
     df = cached_sensitivity(parameter)
 
     meta = {
@@ -740,21 +740,3 @@ elif page == PAGES[8]:
             st.write("**Trajektoria liniowa:**", diag_l)
         if diag_nl:
             st.write("**Trajektoria nieliniowa:**", diag_nl)
-
-
-# ---------------------------------------------------------------------
-# Presentation navigation buttons
-# ---------------------------------------------------------------------
-st.divider()
-idx = PAGES.index(page)
-prev_col, center_col, next_col = st.columns([1, 3, 1])
-with prev_col:
-    if idx > 0 and st.button("← Poprzednia", use_container_width=True):
-        st.session_state.nav = PAGES[idx - 1]
-        st.rerun()
-with center_col:
-    st.caption(f"Sekcja {idx + 1} z {len(PAGES)}")
-with next_col:
-    if idx < len(PAGES) - 1 and st.button("Następna →", use_container_width=True):
-        st.session_state.nav = PAGES[idx + 1]
-        st.rerun()
