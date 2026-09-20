@@ -30,7 +30,6 @@ from model import Params, rhs_linear, rhs_nonlinear, solve_linear
 
 st.set_page_config(
     page_title="Nieliniowa asymilacja a zrównoważony wzrost",
-    page_icon="🌿",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -38,7 +37,7 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-      .block-container {max-width: 1450px; padding-top: 1.2rem; padding-bottom: 2.5rem;}
+      .block-container {max-width: 1450px; padding-top: 2.5rem; padding-bottom: 2.5rem;}
       h1, h2, h3 {letter-spacing: -0.02em;}
       .page-kicker {font-size: .86rem; text-transform: uppercase; letter-spacing: .08em; opacity: .65; margin-bottom: .25rem;}
       .page-title {font-size: 2.15rem; font-weight: 750; line-height: 1.12; margin-bottom: .35rem;}
@@ -165,7 +164,7 @@ def trajectory_plot(path_l, path_nl, variable, ylabel, steady_l=None, steady_nl=
 def style_results(df: pd.DataFrame):
     if df.empty:
         return df
-    visible = ["Model", "Punkt", "Gałąź", "E*", "P*", "τ*", "u*", "x*", "g*", "Z*", "Stabilność"]
+    visible = ["Model", "Punkt", "E*", "P*", "τ*", "u*", "x*", "g*", "Z*", "Stabilność"]
     out = df[visible].copy()
     return out.style.format({c: "{:.4f}" for c in ["E*", "P*", "τ*", "u*", "x*", "g*", "Z*"]})
 
@@ -188,8 +187,6 @@ def cached_multiplicity():
 # ---------------------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------------------
-st.sidebar.markdown("### 🌿 Obrona")
-st.sidebar.caption("Sekcje 1–8 tworzą główną prezentację. Sekcja 9 jest zapleczem do pytań komisji.")
 st.sidebar.radio("Przejdź do sekcji", PAGES, key="nav", label_visibility="collapsed")
 st.sidebar.divider()
 st.sidebar.caption("Agata Kwiatkowska · UEP · 2026")
@@ -226,10 +223,10 @@ if page == PAGES[0]:
 
     st.markdown("### Zakres analizy")
     a, b, c, d = st.columns(4)
-    with a: card("Punkty stacjonarne", "Istnienie oraz możliwość występowania wielu rozwiązań.")
-    with b: card("Stabilność", "Lokalna klasyfikacja punktów stacjonarnych.")
-    with c: card("Wzrost", "Długookresowe tempo wzrostu na ścieżce stacjonarnej.")
-    with d: card("Dynamika", "Przebieg dostosowania przy różnych stanach początkowych.")
+    with a: card("Punkty stacjonarne", "Istnienie, liczba i ekonomiczna dopuszczalność punktów stacjonarnych.")
+    with b: card("Stabilność", "Lokalna klasyfikacja stabilności punktów stacjonarnych.")
+    with c: card("Wzrost", "Długookresowe tempo wzrostu na zrównoważonej ścieżce wzrostu.")
+    with d: card("Dynamika", "Przebieg dostosowania do punktu stacjonarnego przy różnych wartościach \(E_0\)")
 
 
 # ---------------------------------------------------------------------
@@ -238,7 +235,7 @@ if page == PAGES[0]:
 elif page == PAGES[1]:
     page_header(
         "2. Model bazowy — Cazzavillan i Musu (1998)",
-        "Punkt odniesienia: optymalny podział zasobów między produkcję, konsumpcję i ograniczanie emisji, przy bezpośrednim wpływie środowiska na dobrobyt.",
+        "Optymalny podział zasobów między produkcję, konsumpcję i ograniczanie emisji, przy bezpośrednim wpływie środowiska na użyteczność.",
     )
     c1, c2, c3 = st.columns(3, gap="large")
     with c1:
@@ -252,30 +249,64 @@ elif page == PAGES[1]:
         st.markdown("#### Problem planisty")
         st.latex(r"\max_{C,u}\int_0^\infty e^{-\delta t}U_\eta(C,E)\,dt")
         st.latex(r"U_\eta(C,E)=\frac{(CE)^{1-\eta}}{1-\eta},\quad \eta\neq 1")
-        st.latex(r"U_1(C,E)=\ln(CE)")
-        st.caption("δ — stopa dyskontowa; η — parametr krzywizny użyteczności.")
+        st.latex(r"U_1(C,E)=\ln(CE), \quad \eta\eq 1")
+        st.caption("δ — stopa dyskontowa; η — parametr krzywizny funkcji użyteczności.")
     with c3:
         st.markdown("#### Redukcja modelu")
         st.latex(r"x=\frac{C}{K}")
         st.latex(r"\tau=\frac{\lambda}{vK}")
         st.latex(r"u=\sqrt{\tau}")
-        st.write("Dalszą analizę można prowadzić w autonomicznym układzie **(x, E, τ)**.")
 
-    st.markdown("### Co jest punktem odniesienia dla modyfikacji?")
     a, b, c = st.columns(3)
-    with a: card("Istnienie", r"Przy przyjętych założeniach warunek P̄ > δ/(mLη+δ) zapewnia dokładnie jeden dodatni punkt stacjonarny.")
-    with b: card("Wzrost", r"Dodatni wzrost g∗ > 0 zachodzi wtedy i tylko wtedy, gdy B(1−√τ∗) > δ.")
-    with c: card("Stabilność", "Jedna wartość własna o ujemnej części rzeczywistej i dwie o dodatniej → lokalny charakter siodłowy.")
+    with a:
+        card(
+        "Istnienie i jednoznaczność punktu stacjonarnego",
+        "Przy założeniu δ ≥ (1−η)B warunek "
+        "P̄ > δ/(m<sub>L</sub>η + δ) jest konieczny i wystarczający "
+        "dla istnienia dokładnie jednego dodatniego punktu stacjonarnego."
+    )
 
-    with st.expander("Szczegóły analityczne — pełny zredukowany układ modelu liniowego"):
+    with b:
+        card(
+        "Wzrost",
+        "Dodatnie długookresowe tempo wzrostu g<sup>*</sup> > 0 "
+        "występuje wtedy i tylko wtedy, gdy "
+        "B(1−√τ<sup>*</sup>) > δ."
+    )
+
+    with c:
+        card(
+        "Stabilność",
+        "Punkt stacjonarny ma jedną wartość własną o ujemnej części rzeczywistej "
+        "i dwie o dodatniej części rzeczywistej, co oznacza lokalny charakter siodłowy."
+    )
+
+    with st.expander("Pełny zredukowany układ modelu liniowego"):
         st.latex(r"\dot E=m_L(\bar P-E)-B(\tau^{-1/2}-1)")
         st.latex(r"\dot\tau=\tau\left[m_L-\frac{x}{E\tau}+x\right]")
         st.latex(r"\dot x=x\left[\frac{1-\eta}{\eta}\frac{\dot E}{E}+\frac{1-\eta}{\eta}B(1-\sqrt\tau)-\frac{\delta}{\eta}+x\right]")
-    with st.expander("Główne ograniczenia modelu bazowego"):
-        st.write(
-            "Liniowa i odwracalna asymilacja; uproszczona technologia środowiskowa; brak niepewności i amortyzacji kapitału; "
-            "centralny planista; egzogeniczne preferencje i stopa dyskontowa."
-        )
+    st.markdown("### Główne ograniczenia modelu bazowego")
+
+    c1, c2, c3 = st.columns(3)
+    c4, c5, c6 = st.columns(3)
+
+    with c1:
+        card("Liniowa asymilacja", "")
+
+    with c2:
+        card("Uproszczona technologia środowiskowa", "")
+
+    with c3:
+        card("Brak niepewności", "")
+
+    with c4:
+        card("Brak amortyzacji kapitału", "")
+
+    with c5:
+        card("Centralny planista", "")
+
+    with c6:
+        card("Egzogeniczne preferencje i stopa dyskontowa", "")
 
 
 # ---------------------------------------------------------------------
@@ -288,7 +319,7 @@ elif page == PAGES[2]:
     )
     c1, c2 = st.columns([1.15, 1], gap="large")
     with c1:
-        st.plotly_chart(assimilation_plot(BASE_PBAR, BASE_M_L, BASE_M_NL, show_linear=False), use_container_width=True)
+        st.plotly_chart(assimilation_plot(BASE_PBAR, BASE_M_L, BASE_M_NL, show_linear=True), use_container_width=True)
     with c2:
         st.markdown("#### Nieliniowa asymilacja")
         st.latex(r"A_{NL}(E)=m_{NL}E\left(1-\frac{E}{\bar P}\right)")
@@ -297,33 +328,46 @@ elif page == PAGES[2]:
         st.write(
             "Strumień asymilacji jest niski zarówno przy niewielkiej ilości zanieczyszczeń, jak i przy silnej degradacji, a pomiędzy tymi przypadkami osiąga maksimum."
         )
-        st.caption("Jest to założenie modelowe — nie uniwersalny opis wszystkich procesów regeneracyjnych.")
+        st.caption("Jest to założenie modelowe — nie uniwersalny opis procesów regeneracyjnych.")
 
-    st.info("Warunki optymalności względem C i u pozostają bez zmian. Zmieniają się dynamika zasobu środowiska i cena cienia środowiska, a przez to zredukowany układ (x, E, τ).")
+    st.info(
+    "Warunki pierwszego rzędu względem C i u oraz równanie dynamiki ceny cienia kapitału "
+    "pozostają bez zmian. Zmieniają się równania dynamiki zasobu środowiska i jego ceny cienia, "
+    "a tym samym zredukowany układ (x, E, τ)."
+    )
 
     a, b, c = st.columns(3, gap="large")
+
     with a:
         card(
-            "Punkty stacjonarne",
-            "Warunek stacjonarności zasobu środowiska ma dwie gałęzie. Sama obecność dwóch gałęzi nie oznacza dwóch pełnych punktów stacjonarnych; wszystkie warunki muszą być spełnione jednocześnie. Bez dodatkowych założeń nie ma ogólnej gwarancji jednoznaczności.",
-        )
+        "Punkty stacjonarne",
+        "Warunek dE/dt = 0 może prowadzić do dwóch wartości zasobu środowiska: "
+        "E₋(τ) < P̄/2 oraz E₊(τ) > P̄/2. Wynika to z nieliniowego kształtu funkcji asymilacji. "
+        "Nie oznacza to jednak istnienia dwóch punktów stacjonarnych pełnego układu — "
+        "bez dodatkowych założeń nie jest ona z góry określona."
+    )
+
     with b:
         card(
-            "Długookresowy wzrost",
-            "Postać równania g* pozostaje taka sama jak w modelu bazowym, ale jego wartość zależy od otrzymanego punktu. Warunek ekologiczny daje jedynie warunek konieczny możliwości dodatniego wzrostu.",
-        )
+        "Długookresowy wzrost",
+        "Wzór na tempo wzrostu pozostaje taki sam jak w modelu bazowym."
+        "Dodatni wzrost występuje wtedy i tylko wtedy, gdy B(1−√τ*) > δ. "
+    )
+
     with c:
         card(
-            "Lokalna stabilność",
-            "Dla η ≥ 1 każdy ekonomicznie dopuszczalny punkt na górnej gałęzi jest siodłowy; punkt E*=P̄/2 jest siodłowy dla każdego η>0. Pozostałe przypadki zależą od parametrów.",
-        )
+        "Lokalna stabilność",
+        "Dla η ≥ 1 każdy ekonomicznie dopuszczalny punkt na górnej gałęzi "
+        "jest lokalnie siodłowy. Punkt E*=P̄/2 jest siodłowy dla każdego η > 0. "
+        "W pozostałych przypadkach wynik zależy od parametrów."
+    )
 
     with st.expander("Szczegóły analityczne"):
         st.markdown("**Zmodyfikowany układ:**")
         st.latex(r"\dot E=m_{NL}E\left(1-\frac{E}{\bar P}\right)-B(\tau^{-1/2}-1)")
         st.latex(r"\dot\tau=\tau\left[-m_{NL}\left(1-\frac{2E}{\bar P}\right)-\frac{x}{E\tau}+x\right]")
         st.latex(r"\dot x=x\left[\frac{1-\eta}{\eta}\frac{\dot E}{E}+\frac{1-\eta}{\eta}B(1-\sqrt\tau)-\frac{\delta}{\eta}+x\right]")
-        st.markdown("**Konieczny warunek możliwości dodatniego wzrostu:**")
+        st.markdown("**Konieczny warunek dodatniego wzrostu:**")
         st.latex(r"\frac{B m_{NL}\bar P}{4B+m_{NL}\bar P}>\delta")
 
 
@@ -350,7 +394,7 @@ elif page == PAGES[3]:
         )
         st.markdown("#### Kryterium porównania")
         st.latex(r"A_{max}^{L}=A_{max}^{NL}\quad\Longrightarrow\quad m_{NL}=4m_L")
-        st.caption("mL i mNL mają odmienną interpretację ilościową; zrównanie maksimów nie oznacza jednakowej asymilacji przy tym samym E.")
+        st.caption("mL i mNL mają odmienną interpretację; zrównanie maksimów nie oznacza jednakowej asymilacji przy tym samym E.")
     with c2:
         st.plotly_chart(assimilation_plot(BASE_PBAR, BASE_M_L, BASE_M_NL), use_container_width=True)
 
@@ -361,18 +405,18 @@ elif page == PAGES[3]:
     k1.metric("Zasób środowiska E*", fmt(N["E"]), pct(N["E"], L["E"]))
     k2.metric("Udział kapitału u*", fmt(N["u"]), pct(N["u"], L["u"]))
     k3.metric("Tempo wzrostu g*", fmt(N["g"]), pct(N["g"], L["g"]))
-    st.caption("Wartość główna = model nieliniowy; zmiana = względem modelu liniowego.")
+    st.caption("Zmiana względem modelu liniowego.")
 
     takeaway(
-        "W scenariuszu bazowym model nieliniowy ma wyższy E*, niższy u* i wyższy g*. Jednocześnie Z* jest wyższe, lecz w stanie stacjonarnym równoważy je wyższy strumień asymilacji. Wynik dotyczy przyjętego sposobu dopasowania parametrów."
+        "Dla przyjętych wartości parametrów model nieliniowy ma wyższy E*, niższy u* i wyższy g*. Jednocześnie Z* jest wyższe, lecz w stanie stacjonarnym równoważy je wyższy strumień asymilacji."
     )
 
     with st.expander("Pokaż pełną tabelę wyników"):
         st.dataframe(style_results(result_table(L, NL)), use_container_width=True)
-    with st.expander("Uzasadnienie wartości parametrów — skrót"):
+    with st.expander("Uzasadnienie wartości parametrów"):
         st.write(
-            "η=1,5 i δ=0,01 mieszczą się w zakresach spotykanych w literaturze; B=0,45 przyjęto jako przybliżony rząd relacji produkcji do kapitału produkcyjnego. "
-            "Dla mL wykorzystano literaturę środowiskową jako punkt odniesienia skali, bez traktowania parametryzacji jako pełnej kalibracji empirycznej. P̄=1 jest założeniem parametryzacyjnym i wpływa na własności modelu."
+            "η=1,5 i δ=0,01 mieszczą się w zakresach spotykanych w literaturze; B=0,45 przyjęto jako przybliżoną relację produkcji do kapitału produkcyjnego na podstawie wcześniejszych badań. "
+            "Dla mL wykorzystano literaturę środowiskową jako punkt odniesienia skali asymilacji. Parametr mNL dlatego wyznaczono z warunku jednakowej maksymalnej zdolności asymilacyjnej obu modeli; P̄=1 jest założeniem parametryzacyjnym, które wpływa na warunki istnienia punktów stacjonarnych i wyklucza dolną gałąź w scenariuszu bazowym."
         )
 
 
@@ -382,12 +426,12 @@ elif page == PAGES[3]:
 elif page == PAGES[4]:
     page_header(
         "5. Analiza wrażliwości",
-        "Jednoczynnikowa analiza ceteris paribus: czy wnioski ze scenariusza bazowego utrzymują się po zmianie η, δ lub zdolności asymilacyjnej?",
+        "Jednoczynnikowa analiza: czy wnioski ze scenariusza bazowego utrzymują się po zmianie η, δ lub zdolności asymilacyjnej?",
     )
 
     option = st.radio(
-        "Badany parametr",
-        ["η — preferencje", "δ — stopa dyskontowa", "mL — zdolność asymilacyjna"],
+        "Parametr",
+        ["η", "δ", "mL"],
         horizontal=True,
     )
     parameter = {"η — preferencje": "eta", "δ — stopa dyskontowa": "delta", "mL — zdolność asymilacyjna": "m"}[option]
@@ -428,7 +472,7 @@ elif page == PAGES[4]:
     if parameter == "eta":
         st.write(
             "Dla najniższych wartości η procedura nie wyznacza ekonomicznie dopuszczalnego punktu; pierwsza wartość siatki z rozwiązaniem w obu modelach to około η=0,96. "
-            "W zakresie z rozwiązaniami wzrost η zwiększa E*, u* i x*, a obniża g*."
+            "W zakresie z istniejącymi rozwiązaniami wzrost η zwiększa E*, u* i x*, a obniża g*."
         )
     elif parameter == "delta":
         st.write(
@@ -448,11 +492,6 @@ elif page == PAGES[4]:
         with c1: st.plotly_chart(sens_fig("u", "u*"), use_container_width=True)
         with c2: st.plotly_chart(sens_fig("x", "x*"), use_container_width=True)
         with c3: st.plotly_chart(sens_fig("Z", "Z*"), use_container_width=True)
-    with st.expander("Weryfikacja numeryczna"):
-        found = df[df.found]
-        st.write(f"Maksymalna reszta pełnego układu w tej analizie: **{found.residual_max.max():.2e}**.")
-        st.write("W analizowanych zakresach nie zidentyfikowano więcej niż jednego ekonomicznie dopuszczalnego punktu nieliniowego dla żadnej wartości badanego parametru.")
-        st.write("Wszystkie znalezione rozwiązania miały dodatnie g*, spełniały TVC i zostały lokalnie sklasyfikowane jako siodłowe.")
 
 
 # ---------------------------------------------------------------------
@@ -461,7 +500,7 @@ elif page == PAGES[4]:
 elif page == PAGES[5]:
     page_header(
         "6. Dynamika przejściowa",
-        "E jest zmienną stanu. Dla zadanego E₀ zmienne skokowe x i τ są dobierane tak, aby gospodarka znalazła się na stabilnej ścieżce prowadzącej do punktu stacjonarnego.",
+        "Dla zadanego E₀ zmienne skokowe x i τ są dobierane tak, aby gospodarka znalazła się na stabilnej ścieżce prowadzącej do punktu stacjonarnego.",
     )
 
     E0 = st.slider("Początkowy stan środowiska E₀", 0.05, 0.95, 0.50, 0.005)
@@ -495,19 +534,11 @@ elif page == PAGES[5]:
         st.plotly_chart(trajectory_plot(path_l, path_nl, "x", "x(t)", L["x"], NL["x"]), use_container_width=True)
     st.plotly_chart(trajectory_plot(path_l, path_nl, "u", "u(t)", L["u"], NL["u"]), use_container_width=True)
 
-    if abs(E0 - 0.5) < 1e-10:
-        takeaway("Dla E₀=0,50 ten sam początkowy stan środowiska prowadzi do przeciwnych kierunków dostosowania: E(t) maleje w modelu liniowym i rośnie w modelu nieliniowym.")
-    else:
-        takeaway("Ten sam E₀ wymaga różnych wartości zmiennych skokowych x₀ i u₀ w obu modelach, ponieważ ich stabilne ścieżki prowadzą do różnych punktów stacjonarnych.")
 
     warning_box(
         "Przy parametryzacji bazowej najniższą wartością zastosowanej siatki, dla której procedura wyznaczyła dopuszczalną stabilną ścieżkę modelu nieliniowego, było E₀=0,205 (u₀≈0,9885). Dla niższych E₀ trajektoria osiągała granicę u=1. Jest to wynik numeryczny właściwy dla przyjętej parametryzacji i procedury."
     )
 
-    with st.expander("Metoda wyznaczania stabilnej ścieżki"):
-        st.write(
-            "W punkcie stacjonarnym wyznaczany jest stabilny wektor własny Jacobiego. Startując w małej odległości ε=10⁻⁷ od równowagi, pełny układ jest całkowany wstecz do osiągnięcia zadanego E₀, a następnie kierunek czasu jest odwracany."
-        )
     with st.expander("Odchylenie od stabilnej ścieżki"):
         st.write("W pracy dla E₀=0,50 osobno zaburzano x₀ i u₀ o ±1%. W obu modelach trajektorie opuszczały stabilną ścieżkę, co ilustruje siodłowy charakter równowagi. Interaktywną wersję tego eksperymentu zawiera sekcja 9.")
 
@@ -545,7 +576,7 @@ elif page == PAGES[6]:
             st.caption("Plik multiplicity_region.csv.gz powinien znajdować się w tym samym katalogu co app.py.")
 
     with right:
-        st.markdown("#### Przykład ilustracyjny")
+        st.markdown("#### Przykład")
         st.latex(r"\bar P=400,\quad m_{NL}=0{,}05,\quad m_L=0{,}0125")
         _, _, L_ex, NL_ex = solve_pair(B=.45, delta=.01, eta=1.5, Pbar=400, m_l=.0125, m_nl=.05)
         df_ex = result_table(L_ex, NL_ex)
@@ -554,47 +585,37 @@ elif page == PAGES[6]:
         st.caption("Przykład znajduje się poza podstawowym zakresem parametryzacji i nie stanowi ogólnej charakterystyki całej przestrzeni parametrów.")
 
     takeaway("Nieliniowość może zmieniać nie tylko położenie punktu stacjonarnego, lecz także liczbę i lokalną strukturę możliwych długookresowych równowag.")
-    with st.expander("Jak wykonano eksperyment?"):
-        st.write("Najpierw przeszukano szeroko mNL ∈ [0,01; 20] i P̄ ∈ [1; 500]. Następnie zagęszczono siatkę w zidentyfikowanym obszarze do mNL ∈ [0,04; 0,065] i P̄ ∈ [200; 500], przy krokach 0,0005 i 1. Dla każdej kombinacji rozwiązywano wielomianową postać warunku F(E)=0 i sprawdzano dopuszczalność ekonomiczną.")
-
-
+    
 # ---------------------------------------------------------------------
 # 8. Conclusions
 # ---------------------------------------------------------------------
 elif page == PAGES[7]:
     page_header(
         "8. Wnioski i ograniczenia",
-        "Końcowy ekran głównej prezentacji — podsumowanie tego, co zmieniło wprowadzenie nieliniowej funkcji asymilacji i w jakich granicach należy interpretować wyniki.",
+  
     )
     left, right = st.columns(2, gap="large")
     with left:
         st.markdown("### Najważniejsze wnioski")
         st.markdown(
             """
-            - Zmiana funkcji asymilacji zmienia warunki stacjonarności i prowadzi do **dwugałęziowej struktury warunku stacjonarności środowiska**; bez dodatkowych założeń nie można zagwarantować jednoznaczności pełnego punktu stacjonarnego.
+            - Zmiana funkcji asymilacji zmienia warunki stacjonarności i nadaje warunkowi **dE/dt = 0 dwugałęziową strukturę**; bez dodatkowych założeń nie można zagwarantować jednoznaczności pełnego punktu stacjonarnego.
             - W scenariuszu bazowym oraz jednoczynnikowej analizie wrażliwości — tam, gdzie oba modele dawały ekonomicznie dopuszczalne rozwiązania — model nieliniowy miał **wyższe E∗**, **niższe u∗** i **wyższe g∗**.
-            - Dynamika przejściowa pokazuje większe znaczenie warunku początkowego; dla tego samego E₀ modele mogą przewidywać **przeciwny kierunek zmian E(t)**.
-            - Eksperyment eksploracyjny potwierdził, że model nieliniowy może dla wybranych parametrów posiadać **kilka ekonomicznie dopuszczalnych punktów stacjonarnych**.
+            - Różnice między modelami dotyczą również dynamiki przejściowej; przy niskich wartościach E₀ w modelu nieliniowym nie zawsze udało się wyznaczyć ekonomicznie dopuszczalną stabilną ścieżkę.
+            - Eksperyment eksploracyjny potwierdził, że model nieliniowy może dla wybranych kombinacji parametrów posiadać **kilka ekonomicznie dopuszczalnych punktów stacjonarnych**.
             """
         )
     with right:
         st.markdown("### Ograniczenia")
         st.markdown(
             """
-            - Funkcja nieliniowa nadal jest uproszczeniem; nie obejmuje histerezy ani nagłych przejść między alternatywnymi stanami ekosystemu.
-            - **P̄=1 nie jest neutralną normalizacją** — wpływa na warunki istnienia i w analizie bazowej wyklucza dolną gałąź.
-            - Parametryzacja nie odwzorowuje konkretnej gospodarki ani ekosystemu.
-            - Analiza wrażliwości jest jednoczynnikowa; nie przeprowadzono systematycznej analizy łącznej wszystkich parametrów.
-            - Wyniki stabilności są głównie lokalne, a analiza wielopunktowości ma charakter eksploracyjny.
+            - Parametryzacja nie stanowi pełnej kalibracji empirycznej; wyniki nie opisują konkretnej gospodarki ani konkretnego ekosystemu.
+            - Zastosowana nieliniowa funkcja asymilacji wciąż jest **uproszczeniem procesów regeneracji środowiska** i nie uwzględnia m.in. histerezy ani nagłych przejść między alternatywnymi stanami ekosystemu.
+            - Przyjęcie **P̄ = 1 nie jest neutralną normalizacją** — wpływa na warunki istnienia punktów stacjonarnych i w analizie bazowej wyklucza ekonomicznie dopuszczalne rozwiązania na dolnej gałęzi.
+            - Analiza wrażliwości była głównie **jednoczynnikowa**, a eksperyment dotyczący wielopunktowości obejmował tylko wybrany zakres parametrów mNL i P̄ przy ustalonych pozostałych parametrach; nie stanowi więc pełnej analizy całej przestrzeni parametrów.
             """
         )
-    st.markdown(
-        """
-        <div class="takeaway" style="font-size:1.08rem"><b>Take-away:</b> postać funkcji asymilacji może wpływać nie tylko na wartości zmiennych w stanie stacjonarnym, lecz także na strukturę możliwych równowag i przebieg dynamiki przejściowej.</div>
-        """,
-        unsafe_allow_html=True,
-    )
-    st.caption("Koniec głównej prezentacji. Sekcja 9 służy do odpowiedzi na pytania komisji i eksperymentów z parametrami.")
+
 
 
 # ---------------------------------------------------------------------
@@ -602,8 +623,7 @@ elif page == PAGES[7]:
 # ---------------------------------------------------------------------
 elif page == PAGES[8]:
     page_header(
-        "9. Symulacje — zaplecze do pytań komisji",
-        "Interaktywny eksperyment „co się stanie, jeśli…?”. Ta sekcja nie jest częścią głównej narracji obrony.",
+        "9. Symulacje",
     )
 
     st.markdown("### Parametry modelu")
@@ -621,7 +641,7 @@ elif page == PAGES[8]:
             m_nl = st.number_input("mNL", min_value=0.001, max_value=80.0, value=BASE_M_NL, step=0.05, format="%.3f")
             st.warning("mNL ustawiono niezależnie od mL — główne kryterium porównawcze z pracy nie obowiązuje.")
     with c3:
-        with st.expander("Parametry zaawansowane", expanded=True):
+        with st.expander("Pozostałe parametry", expanded=True):
             B = st.number_input("B", min_value=0.01, max_value=5.0, value=BASE_B, step=0.01, format="%.3f")
             Pbar = st.number_input("P̄", min_value=0.05, max_value=500.0, value=BASE_PBAR, step=0.05, format="%.3f")
 
@@ -712,7 +732,7 @@ elif page == PAGES[8]:
         with c2: st.plotly_chart(trajectory_plot(path_l, path_nl, "x", "x(t)", steady_l_x, steady_nl_x), use_container_width=True)
         st.plotly_chart(trajectory_plot(path_l, path_nl, "u", "u(t)", steady_l_u, steady_nl_u), use_container_width=True)
 
-    with st.expander("Pokaż diagnostykę techniczną"):
+    with st.expander("Szczegóły"):
         if not table.empty:
             diag_cols = ["Model", "Punkt", "R_max", "Dodatni wzrost", "TVC", "Stabilność", "Wartości własne"]
             st.dataframe(table[diag_cols], use_container_width=True)
