@@ -92,7 +92,7 @@ def pct(new, old):
     return f"{(new / old - 1) * 100:+.1f}%".replace(".", ",")
 
 
-def page_header(title: str, subtitle: str):
+def page_header(title: str, subtitle: str = ""):
     st.markdown(
         f"""
         <div class="page-kicker">Obrona pracy magisterskiej</div>
