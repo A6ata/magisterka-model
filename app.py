@@ -37,7 +37,7 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-      .block-container {max-width: 1450px; padding-top: 2.5rem; padding-bottom: 2.5rem;}
+      .block-container {max-width: 1450px; padding-top: 3.0rem; padding-bottom: 2.5rem;}
       h1, h2, h3 {letter-spacing: -0.02em;}
       .page-kicker {font-size: .86rem; text-transform: uppercase; letter-spacing: .08em; opacity: .65; margin-bottom: .25rem;}
       .page-title {font-size: 2.15rem; font-weight: 750; line-height: 1.12; margin-bottom: .35rem;}
@@ -67,7 +67,7 @@ PAGES = [
     "6. Dynamika przejściowa",
     "7. Wielopunktowość",
     "8. Wnioski i ograniczenia",
-    "9. Symulacje — pytania komisji",
+    "9. Symulacje",
 ]
 
 if "nav" not in st.session_state:
@@ -212,13 +212,12 @@ if page == PAGES[0]:
         st.subheader("Problem badawczy")
         st.write(
             "Rzeczywiste procesy regeneracji środowiska są złożone i mogą zależeć od jego aktualnego stanu. "
-            "W modelach ekonomicznych są reprezentowane za pomocą uproszczonych funkcji asymilacji, a ich postać może wpływać na właściwości modelu."
+            "W modelach ekonomicznych często są reprezentowane za pomocą uproszczonych funkcji asymilacji. Przyęta postać funkcji może jednak wpływać na właściwości modelu."
         )
     with c2:
         st.subheader("Cel pracy")
         st.write(
-            "Określenie konsekwencji zastąpienia liniowej funkcji asymilacji funkcją nieliniową, zależną od aktualnego stanu środowiska, "
-            "w modelu optymalnego zrównoważonego wzrostu Cazzavillana i Musu (1998)."
+            "Określenie konsekwencji zastąpienia liniowej funkcji asymilacji zanieczyszczeń funkcją nieliniową, uwzględniającą osłabienie zdolności asymilacyjnych przy silnej degradacji środowiska, w modelu optymalnego zrównoważonego wzrostu Cazzavillana i Musu (1998)."
         )
 
     st.markdown("### Zakres analizy")
@@ -226,7 +225,7 @@ if page == PAGES[0]:
     with a: card("Punkty stacjonarne", "Istnienie, liczba i ekonomiczna dopuszczalność punktów stacjonarnych.")
     with b: card("Stabilność", "Lokalna klasyfikacja stabilności punktów stacjonarnych.")
     with c: card("Wzrost", "Długookresowe tempo wzrostu na zrównoważonej ścieżce wzrostu.")
-    with d: card("Dynamika", r"Przebieg dostosowania do punktu stacjonarnego przy różnych wartościach \(E_0\)")
+    with d: card("Dynamika", r"Przebieg stabilnej ścieżki prowadzącej do punktu stacjonarnego przy różnych wartościach E0")
 
 
 # ---------------------------------------------------------------------
