@@ -243,6 +243,7 @@ elif page == PAGES[1]:
         st.latex(r"Z=B\left(\frac{1}{u}-1\right)")
         st.latex(r"\dot K=B(1-u)K-C")
         st.latex(r"\dot E=A_L(E)-Z")
+        st.latex(r"A_L(E)=m_L(\bar P-E)")
         st.caption("K, E — zmienne stanu; C, u — zmienne sterujące.")
     with c2:
         st.markdown("#### Problem planisty")
@@ -314,11 +315,11 @@ elif page == PAGES[1]:
 elif page == PAGES[2]:
     page_header(
         "3. Modyfikacja funkcji asymilacji i wyniki analityczne",
-        "Zmiana dotyczy sposobu opisu naturalnej regeneracji środowiska; pozostała struktura problemu optymalizacyjnego pozostaje punktem odniesienia.",
+        "Zmiana dotyczy sposobu opisu naturalnej regeneracji środowiska.",
     )
     c1, c2 = st.columns([1.15, 1], gap="large")
     with c1:
-        st.plotly_chart(assimilation_plot(BASE_PBAR, BASE_M_L, BASE_M_NL, show_linear=True), use_container_width=True)
+        st.plotly_chart(assimilation_plot(BASE_PBAR, BASE_M_L, BASE_M_NL, show_linear=False), use_container_width=True)
     with c2:
         st.markdown("#### Nieliniowa asymilacja")
         st.latex(r"A_{NL}(E)=m_{NL}E\left(1-\frac{E}{\bar P}\right)")
@@ -343,7 +344,7 @@ elif page == PAGES[2]:
         "Warunek dE/dt = 0 może prowadzić do dwóch wartości zasobu środowiska: "
         "E₋(τ) < P̄/2 oraz E₊(τ) > P̄/2. Wynika to z nieliniowego kształtu funkcji asymilacji. "
         "Nie oznacza to jednak istnienia dwóch punktów stacjonarnych pełnego układu — "
-        "bez dodatkowych założeń nie jest ona z góry określona."
+        "bez dodatkowych założeń ich liczba nie jest z góry określona."
     )
 
     with b:
