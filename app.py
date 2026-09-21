@@ -405,7 +405,7 @@ elif page == PAGES[3]:
     k1.metric("Zasób środowiska E*", fmt(N["E"]), pct(N["E"], L["E"]))
     k2.metric("Udział kapitału u*", fmt(N["u"]), pct(N["u"], L["u"]))
     k3.metric("Tempo wzrostu g*", fmt(N["g"]), pct(N["g"], L["g"]))
-    st.caption("Zmiana względem modelu liniowego.")
+    st.caption("Model nieliniowy - zmiana względem modelu liniowego.")
 
     takeaway(
         "Dla przyjętych wartości parametrów model nieliniowy ma wyższy E*, niższy u* i wyższy g*. Jednocześnie Z* jest wyższe, lecz w stanie stacjonarnym równoważy je wyższy strumień asymilacji."
@@ -416,7 +416,7 @@ elif page == PAGES[3]:
     with st.expander("Uzasadnienie wartości parametrów"):
         st.write(
             "η=1,5 i δ=0,01 mieszczą się w zakresach spotykanych w literaturze; B=0,45 przyjęto jako przybliżoną relację produkcji do kapitału produkcyjnego na podstawie wcześniejszych badań. "
-            "Dla mL wykorzystano literaturę środowiskową jako punkt odniesienia skali asymilacji. Parametr mNL dlatego wyznaczono z warunku jednakowej maksymalnej zdolności asymilacyjnej obu modeli; P̄=1 jest założeniem parametryzacyjnym, które wpływa na warunki istnienia punktów stacjonarnych i wyklucza dolną gałąź w scenariuszu bazowym."
+            "Dla mL wykorzystano literaturę środowiskową jako punkt odniesienia skali asymilacji. Parametr mNL wyznaczono z warunku jednakowej maksymalnej zdolności asymilacyjnej obu modeli; P̄=1 jest założeniem parametryzacyjnym, które wpływa na warunki istnienia punktów stacjonarnych i wyklucza dolną gałąź w scenariuszu bazowym."
         )
 
 
@@ -426,7 +426,7 @@ elif page == PAGES[3]:
 elif page == PAGES[4]:
     page_header(
         "5. Analiza wrażliwości",
-        "Jednoczynnikowa analiza: czy wnioski ze scenariusza bazowego utrzymują się po zmianie η, δ lub zdolności asymilacyjnej?",
+        "Jednoczynnikowa analiza wrażliwości: czy wnioski ze scenariusza bazowego utrzymują się po zmianie η, δ lub m?",
     )
 
     option = st.radio(
@@ -480,7 +480,7 @@ elif page == PAGES[4]:
         )
     else:
         st.write(
-            "Wzrost zdolności asymilacyjnej wyraźnie zmniejsza u* oraz zwiększa x* i g*. Zależność E* od mL nie jest ściśle monotoniczna przy niskich wartościach, a następnie E* rośnie wraz ze zdolnością asymilacyjną."
+            "Wzrost zdolności asymilacyjnej zmniejsza u* oraz zwiększa x* i g*. Zależność E* od mL nie jest ściśle monotoniczna przy niskich wartościach parametru, a następnie E* rośnie wraz z mL."
         )
 
     takeaway(
@@ -584,7 +584,7 @@ elif page == PAGES[6]:
         st.write("Model liniowy ma **1** punkt stacjonarny. Model nieliniowy ma **3**: dwa siodłowe i jeden niestabilny.")
         st.caption("Przykład znajduje się poza podstawowym zakresem parametryzacji i nie stanowi ogólnej charakterystyki całej przestrzeni parametrów.")
 
-    takeaway("Nieliniowość może zmieniać nie tylko położenie punktu stacjonarnego, lecz także liczbę i lokalną strukturę możliwych długookresowych równowag.")
+    takeaway("Nieliniowość może wpływać nie tylko na liczbę i położenie punktów stacjonarnych, lecz także na ich lokalny charakter stabilności.")
     
 # ---------------------------------------------------------------------
 # 8. Conclusions
@@ -599,7 +599,7 @@ elif page == PAGES[7]:
         st.markdown("### Najważniejsze wnioski")
         st.markdown(
             """
-            - Zmiana funkcji asymilacji zmienia warunki stacjonarności i nadaje warunkowi **dE/dt = 0 dwugałęziową strukturę**; bez dodatkowych założeń nie można zagwarantować jednoznaczności pełnego punktu stacjonarnego.
+            - Zmiana funkcji asymilacji zmienia warunki stacjonarności i nadaje warunkowi **dE/dt = 0 dwugałęziową strukturę**; bez dodatkowych założeń nie można zagwarantować jednoznaczności punktu stacjonarnego.
             - W scenariuszu bazowym oraz jednoczynnikowej analizie wrażliwości — tam, gdzie oba modele dawały ekonomicznie dopuszczalne rozwiązania — model nieliniowy miał **wyższe E∗**, **niższe u∗** i **wyższe g∗**.
             - Różnice między modelami dotyczą również dynamiki przejściowej; przy niskich wartościach E₀ w modelu nieliniowym nie zawsze udało się wyznaczyć ekonomicznie dopuszczalną stabilną ścieżkę.
             - Eksperyment eksploracyjny potwierdził, że model nieliniowy może dla wybranych kombinacji parametrów posiadać **kilka ekonomicznie dopuszczalnych punktów stacjonarnych**.
